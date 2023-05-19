@@ -29,8 +29,3 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
 
-  build:
-    runs-on: ubuntu-latest
-    needs: [ test, lint ]
-    steps:
-      - uses: actions/checkout@v3

@@ -15,3 +15,7 @@ type LoginOutput struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
+
+type LoginGoogleInput struct {
+	Code string `json:"code" form:"code" binding:"required"`
+}

@@ -7,10 +7,13 @@ import (
 )
 
 type Config struct {
-	Db        *gorm.DB
-	Port      string
-	SecretKey string
-	DbTest    *gorm.DB
+	Db                       *gorm.DB
+	Port                     string
+	SecretKey                string
+	DbTest                   *gorm.DB
+	Oauth2GoogleClientId     string
+	Oauth2GoogleClientSecret string
+	ClientUrl                string
 }
 
 func GetConfig() (*Config, error) {
@@ -30,10 +33,13 @@ func GetConfig() (*Config, error) {
 	})
 
 	config := &Config{
-		Db:        db,
-		Port:      structure.AppPort,
-		SecretKey: structure.AppSecretKey,
-		DbTest:    dbTest,
+		Db:                       db,
+		Port:                     structure.AppPort,
+		SecretKey:                structure.AppSecretKey,
+		DbTest:                   dbTest,
+		Oauth2GoogleClientId:     structure.Oauth2GoogleClientId,
+		Oauth2GoogleClientSecret: structure.Oauth2GoogleClientSecret,
+		ClientUrl:                structure.ClientUrl,
 	}
 
 	return config, nil

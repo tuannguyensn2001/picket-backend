@@ -15,7 +15,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: 1.20
-      - name: Build
-        run: go build -v ./...
+      - name: Set up environment
+        run: |
+            mkdir -p $HOME/go
+            echo "::set-env name=GOPATH::$HOME/go"
+            echo "::add-path::$HOME/go/bin"
       - name: run tests
         run: go test ./...

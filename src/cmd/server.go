@@ -22,7 +22,10 @@ func server(config config.Config) *cobra.Command {
 
 			routes.Routes(r, config)
 
-			r.Run(fmt.Sprintf(":%s", config.Port))
+			err := r.Run(fmt.Sprintf(":%s", config.Port))
+			if err != nil {
+				return
+			}
 		},
 	}
 }

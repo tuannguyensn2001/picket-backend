@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"picket/src/config"
-	"picket/src/internal/routes"
+	"picket/src/routes"
 )
 
 func server(config config.Config) *cobra.Command {

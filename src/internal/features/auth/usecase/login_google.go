@@ -31,14 +31,26 @@ func (u *usecase) LoginGoogle(ctx context.Context, code string) (*dto.LoginOutpu
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		user = &entities.User{
-			Email:    googleAccount.Email,
-			Username: googleAccount.Username,
-			Profile: &entities.Profile{
-				AvatarUrl: googleAccount.Profile.AvatarUrl,
-			},
-		}
-		err = u.repository.Create(ctx, user)
+		err := u.repository.Transaction(ctx, func(ctx context.Context) error {
+			user = &entities.User{
+				Email:    googleAccount.Email,
+				Username: googleAccount.Username,
+				Profile: &entities.Profile{
+					AvatarUrl: googleAccount.Profile.AvatarUrl,
+				},
+			}
+			err = u.repository.Create(ctx, user)
+			if err != nil {
+				log.Error().Err(err).Send()
+				return err
+			}
+			err = u.PushToKafkaAfterCreate(ctx, *user)
+			if err != nil {
+				log.Error().Err(err).Send()
+				return err
+			}
+			return nil
+		})
 		if err != nil {
 			log.Error().Err(err).Send()
 			return nil, err

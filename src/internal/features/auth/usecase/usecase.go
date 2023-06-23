@@ -2,9 +2,12 @@ package auth_usecase
 
 import (
 	"context"
+	"go.opentelemetry.io/otel"
 	"picket/src/base"
 	"picket/src/internal/entities"
 )
+
+var tracer = otel.Tracer("auth_usecase")
 
 type IRepository interface {
 	Create(ctx context.Context, user *entities.User) error
@@ -22,8 +25,9 @@ type usecase struct {
 	repository    IRepository
 	secretKey     string
 	oauth2Service IOauth2Service
+	kafkaAddress  string
 }
 
-func New(repository IRepository, secretKey string, oauth2Service IOauth2Service) *usecase {
-	return &usecase{repository: repository, secretKey: secretKey, oauth2Service: oauth2Service}
+func New(repository IRepository, secretKey string, oauth2Service IOauth2Service, kafkaAddress string) *usecase {
+	return &usecase{repository: repository, secretKey: secretKey, oauth2Service: oauth2Service, kafkaAddress: kafkaAddress}
 }

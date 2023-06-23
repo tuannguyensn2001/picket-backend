@@ -28,19 +28,32 @@ func (u *usecase) Register(ctx context.Context, input dto.RegisterInput) error {
 		return err
 	}
 
-	user = &entities.User{
-		Email:    input.Email,
-		Password: string(password),
-		Username: input.Username,
-		Wallet: &entities.Wallet{
-			Balance: 0,
-		},
-		Profile: &entities.Profile{
-			AvatarUrl: "https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg",
-		},
-	}
-	err = u.repository.Create(ctx, user)
+	err = u.repository.Transaction(ctx, func(ctx context.Context) error {
+		user = &entities.User{
+			Email:    input.Email,
+			Password: string(password),
+			Username: input.Username,
+			Wallet: &entities.Wallet{
+				Balance: 0,
+			},
+			Profile: &entities.Profile{
+				AvatarUrl: "https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg",
+			},
+		}
+		err = u.repository.Create(ctx, user)
 
+		if err != nil {
+			log.Error().Err(err).Send()
+			return err
+		}
+
+		err = u.PushToKafkaAfterCreate(ctx, *user)
+		if err != nil {
+			log.Error().Err(err).Send()
+			return err
+		}
+		return nil
+	})
 	if err != nil {
 		log.Error().Err(err).Send()
 		return err

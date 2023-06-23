@@ -1,6 +1,8 @@
 package config
 
 import (
+	"github.com/rs/zerolog/log"
+	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -14,6 +16,7 @@ type Config struct {
 	Oauth2GoogleClientId     string
 	Oauth2GoogleClientSecret string
 	ClientUrl                string
+	KafkaAddress             string
 }
 
 func GetConfig() (*Config, error) {
@@ -28,6 +31,9 @@ func GetConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	if err := db.Use(otelgorm.NewPlugin()); err != nil {
+		log.Error().Err(err).Send()
+	}
 	dbTest, _ := gorm.Open(postgres.Open(structure.DatabaseTestUrl), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
@@ -40,6 +46,7 @@ func GetConfig() (*Config, error) {
 		Oauth2GoogleClientId:     structure.Oauth2GoogleClientId,
 		Oauth2GoogleClientSecret: structure.Oauth2GoogleClientSecret,
 		ClientUrl:                structure.ClientUrl,
+		KafkaAddress:             structure.KafkaAddress,
 	}
 
 	return config, nil

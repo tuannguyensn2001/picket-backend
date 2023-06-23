@@ -14,6 +14,7 @@ type Bootstrap struct {
 	Oauth2GoogleClientId     string `mapstructure:"OAUTH2_GOOGLE_CLIENT_ID"`
 	Oauth2GoogleClientSecret string `mapstructure:"OAUTH2_GOOGLE_CLIENT_SECRET"`
 	ClientUrl                string `mapstructure:"CLIENT_URL"`
+	KafkaAddress             string `mapstructure:"KAFKA_ADDRESS"`
 }
 
 func bootstrap() (Bootstrap, error) {

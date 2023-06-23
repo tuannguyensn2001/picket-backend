@@ -3,7 +3,7 @@ package entities
 type User struct {
 	Id              int      `json:"id" gorm:"column:id"`
 	Email           string   `json:"email" gorm:"column:email"`
-	Password        string   `json:"password" gorm:"column:password"`
+	Password        string   `json:"-" gorm:"column:password"`
 	Username        string   `json:"username" gorm:"column:username"`
 	EmailVerifiedAt int64    `json:"email_verified_at" gorm:"column:email_verified_at"`
 	CreatedAt       int64    `json:"created_at" gorm:"column:created_at"`

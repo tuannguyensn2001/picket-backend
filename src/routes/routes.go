@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"net/http"
 	"picket/src/config"
 	auth_repository "picket/src/internal/features/auth/repository"
@@ -14,11 +15,12 @@ import (
 func Routes(r *gin.Engine, config config.Config) {
 	r.Use(middlewares.Recover)
 	r.Use(middlewares.Cors)
+	r.Use(otelgin.Middleware("picket-backend"))
 
 	oauth2Service := oauth2_service.New(config)
 
 	authRepository := auth_repository.New(config.Db)
-	authUsecase := auth_usecase.New(authRepository, config.SecretKey, oauth2Service)
+	authUsecase := auth_usecase.New(authRepository, config.SecretKey, oauth2Service, config.KafkaAddress)
 	authTransport := auth_transport.New(authUsecase)
 
 	g := r.Group("/api")

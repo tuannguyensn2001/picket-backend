@@ -35,8 +35,12 @@ func (u *usecase) Register(ctx context.Context, input dto.RegisterInput) error {
 		Wallet: &entities.Wallet{
 			Balance: 0,
 		},
+		Profile: &entities.Profile{
+			AvatarUrl: "https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg",
+		},
 	}
 	err = u.repository.Create(ctx, user)
+
 	if err != nil {
 		log.Error().Err(err).Send()
 		return err

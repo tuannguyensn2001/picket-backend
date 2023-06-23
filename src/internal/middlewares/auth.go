@@ -8,7 +8,7 @@ import (
 )
 
 type IAUthUsecase interface {
-	Verify(ctx context.Context, token string) (int64, error)
+	Verify(ctx context.Context, token string) (int, error)
 }
 
 func Auth(usecase IAUthUsecase) gin.HandlerFunc {

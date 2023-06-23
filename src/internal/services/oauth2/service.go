@@ -98,9 +98,9 @@ func (s *service) GetUserProfileByAccessToken(ctx context.Context, accessToken s
 	result := entities.User{
 		Username: response.Name,
 		Email:    response.Email,
-		//Profile: &entities.Profile{
-		//	Avatar: response.Picture,
-		//},
+		Profile: &entities.Profile{
+			AvatarUrl: response.Picture,
+		},
 	}
 	return &result, nil
 

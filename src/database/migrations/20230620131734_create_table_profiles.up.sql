@@ -2,8 +2,8 @@ create table profiles
 (
     id         serial primary key,
     user_id    integer,
-    avatar_url string,
-    nickname   string,
+    avatar_url varchar,
+    nickname   varchar,
     created_at integer,
     updated_at integer
 )

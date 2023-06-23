@@ -25,6 +25,7 @@ func Routes(r *gin.Engine, config config.Config) {
 	g.POST("/v1/auth/register", authTransport.Register)
 	g.POST("/v1/auth/login", authTransport.Login)
 	g.POST("/v1/auth/login/google", authTransport.LoginGoogle)
+	g.GET("/v1/auth/me", middlewares.Auth(authUsecase), authTransport.GetMe)
 
 	r.POST("/google", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{

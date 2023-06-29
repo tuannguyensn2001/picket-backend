@@ -19,3 +19,7 @@ type LoginOutput struct {
 type LoginGoogleInput struct {
 	Code string `json:"code" form:"code" binding:"required"`
 }
+
+type NewUserRegisterPayload struct {
+	UserId int `json:"user_id"`
+}

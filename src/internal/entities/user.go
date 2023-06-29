@@ -11,6 +11,7 @@ type User struct {
 	Wallet          *Wallet  `json:"wallet,omitempty" `
 	Version         int      `json:"version" gorm:"column:version"`
 	Profile         *Profile `json:"profile,omitempty" `
+	IsAdmin         bool     `json:"is_admin" gorm:"column:is_admin"`
 }
 
 type Profile struct {

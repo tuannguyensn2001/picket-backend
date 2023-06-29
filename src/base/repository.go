@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type key struct {
@@ -24,10 +25,21 @@ type IBaseRepository interface {
 
 func (r *Repository) GetDB(ctx context.Context) *gorm.DB {
 	val, ok := ctx.Value(keyDB).(*gorm.DB)
+	var db *gorm.DB
 	if !ok {
-		return r.Db
+		db = r.Db
+	} else {
+		db = val
 	}
-	return val
+
+	check, ok := ctx.Value("log-db").(bool)
+	if ok && check {
+		db = db.Session(&gorm.Session{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
+
+	}
+	return db
 }
 
 func (r *Repository) BeginTransaction(ctx context.Context, opts ...*sql.TxOptions) context.Context {

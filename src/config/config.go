@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
 	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
@@ -17,6 +18,8 @@ type Config struct {
 	Oauth2GoogleClientSecret string
 	ClientUrl                string
 	KafkaAddress             string
+	Asynq                    *asynq.Client
+	AsynqServer              *asynq.Server
 }
 
 func GetConfig() (*Config, error) {
@@ -26,7 +29,7 @@ func GetConfig() (*Config, error) {
 	}
 
 	db, err := gorm.Open(postgres.Open(structure.DatabaseUrl), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Warn),
 	})
 	if err != nil {
 		return nil, err
@@ -38,6 +41,14 @@ func GetConfig() (*Config, error) {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 
+	client := asynq.NewClient(asynq.RedisClientOpt{Addr: structure.RedisUrl, DB: structure.RedisAsynqDb})
+	srv := asynq.NewServer(asynq.RedisClientOpt{
+		Addr: structure.RedisUrl,
+		DB:   structure.RedisAsynqDb,
+	}, asynq.Config{
+		Concurrency: 5,
+	})
+
 	config := &Config{
 		Db:                       db,
 		Port:                     structure.AppPort,
@@ -47,6 +58,8 @@ func GetConfig() (*Config, error) {
 		Oauth2GoogleClientSecret: structure.Oauth2GoogleClientSecret,
 		ClientUrl:                structure.ClientUrl,
 		KafkaAddress:             structure.KafkaAddress,
+		Asynq:                    client,
+		AsynqServer:              srv,
 	}
 
 	return config, nil

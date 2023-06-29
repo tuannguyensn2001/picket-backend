@@ -40,6 +40,14 @@ func (u *usecase) Register(ctx context.Context, input dto.RegisterInput) error {
 				AvatarUrl: "https://static.vecteezy.com/system/resources/previews/009/734/564/original/default-avatar-profile-icon-of-social-media-user-vector.jpg",
 			},
 		}
+		count, err := u.repository.CountAllUsers(ctx)
+		if err != nil {
+			log.Error().Err(err).Send()
+			return err
+		}
+		if count == 0 {
+			user.IsAdmin = true
+		}
 		err = u.repository.Create(ctx, user)
 
 		if err != nil {
@@ -47,11 +55,12 @@ func (u *usecase) Register(ctx context.Context, input dto.RegisterInput) error {
 			return err
 		}
 
-		err = u.PushToKafkaAfterCreate(ctx, *user)
+		err = u.PushJobAfterRegister(ctx, user.Id)
 		if err != nil {
 			log.Error().Err(err).Send()
 			return err
 		}
+
 		return nil
 	})
 	if err != nil {

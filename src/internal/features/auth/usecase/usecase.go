@@ -2,6 +2,7 @@ package auth_usecase
 
 import (
 	"context"
+	"github.com/hibiken/asynq"
 	"go.opentelemetry.io/otel"
 	"picket/src/base"
 	"picket/src/internal/entities"
@@ -14,6 +15,8 @@ type IRepository interface {
 	FindByEmail(ctx context.Context, email string) (*entities.User, error)
 	FindById(ctx context.Context, id int) (*entities.User, error)
 	base.IBaseRepository
+	CountAllUsers(ctx context.Context) (int64, error)
+	FindAdmin(ctx context.Context) (*entities.User, error)
 }
 
 type IOauth2Service interface {
@@ -26,8 +29,9 @@ type usecase struct {
 	secretKey     string
 	oauth2Service IOauth2Service
 	kafkaAddress  string
+	asynq         *asynq.Client
 }
 
-func New(repository IRepository, secretKey string, oauth2Service IOauth2Service, kafkaAddress string) *usecase {
-	return &usecase{repository: repository, secretKey: secretKey, oauth2Service: oauth2Service, kafkaAddress: kafkaAddress}
+func New(repository IRepository, secretKey string, oauth2Service IOauth2Service, kafkaAddress string, asynq *asynq.Client) *usecase {
+	return &usecase{repository: repository, secretKey: secretKey, oauth2Service: oauth2Service, kafkaAddress: kafkaAddress, asynq: asynq}
 }

@@ -39,12 +39,21 @@ func (u *usecase) LoginGoogle(ctx context.Context, code string) (*dto.LoginOutpu
 					AvatarUrl: googleAccount.Profile.AvatarUrl,
 				},
 			}
+			count, err := u.repository.CountAllUsers(ctx)
+			if err != nil {
+				log.Error().Err(err).Send()
+				return err
+			}
+			if count == 0 {
+				user.IsAdmin = true
+			}
 			err = u.repository.Create(ctx, user)
 			if err != nil {
 				log.Error().Err(err).Send()
 				return err
 			}
-			err = u.PushToKafkaAfterCreate(ctx, *user)
+
+			err = u.PushJobAfterRegister(ctx, user.Id)
 			if err != nil {
 				log.Error().Err(err).Send()
 				return err

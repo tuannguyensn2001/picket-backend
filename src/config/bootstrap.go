@@ -15,6 +15,8 @@ type Bootstrap struct {
 	Oauth2GoogleClientSecret string `mapstructure:"OAUTH2_GOOGLE_CLIENT_SECRET"`
 	ClientUrl                string `mapstructure:"CLIENT_URL"`
 	KafkaAddress             string `mapstructure:"KAFKA_ADDRESS"`
+	RedisUrl                 string `mapstructure:"REDIS_URL"`
+	RedisAsynqDb             int    `mapstructure:"REDIS_ASYNQ_DB"`
 }
 
 func bootstrap() (Bootstrap, error) {

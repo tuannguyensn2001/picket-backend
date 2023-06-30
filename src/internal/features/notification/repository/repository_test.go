@@ -5,6 +5,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
 	"picket/src/base"
+	"picket/src/config"
 	"picket/src/internal/entities"
 	"testing"
 )
@@ -59,4 +60,12 @@ func TestCreate(t *testing.T) {
 
 		})
 	})
+}
+
+func TestFindByTo(t *testing.T) {
+	cfg, _ := config.GetConfig()
+	repo := New(cfg.Db)
+	result, err := repo.FindByToUser(context.Background(), 26)
+	require.Nil(t, err)
+	require.Equal(t, 1, len(result))
 }

@@ -37,6 +37,7 @@ func Routes(r *gin.Engine, config config.Config) {
 	g.GET("/v1/auth/me", middlewares.Auth(authUsecase), authTransport.GetMe)
 
 	g.GET("/v1/notifications/own/unread/count", middlewares.Auth(authUsecase), notificationTransport.CountUnread)
+	g.GET("/v1/notifications/own", middlewares.Auth(authUsecase), notificationTransport.GetOwn)
 
 	r.POST("/google", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{

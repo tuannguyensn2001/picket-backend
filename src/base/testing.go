@@ -39,7 +39,10 @@ func TestWithDatabase(f callback) {
 	}
 	db := cfg.DbTest
 	defer func() {
-		HookReset(context.TODO(), db)
+		err := HookReset(context.TODO(), db)
+		if err != nil {
+			log.Fatal().Err(err).Send()
+		}
 	}()
 	f(db)
 }

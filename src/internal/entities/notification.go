@@ -30,4 +30,6 @@ type Notification struct {
 	ReadAt    int     `json:"read_at"`
 	CreatedAt int     `json:"created_at"`
 	UpdatedAt int     `json:"updated_at"`
+	FromUser  *User   `json:"from_user" gorm:"-"`
+	ToUser    *User   `json:"to_user" gorm:"-"`
 }

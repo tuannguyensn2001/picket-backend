@@ -4,12 +4,14 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"picket/src/internal/entities"
 	"picket/src/utils"
 )
 
 type IUsecase interface {
 	CreateNotificationWhenUserRegisterSuccess(ctx context.Context, userId int) error
 	CountUnreadByUser(ctx context.Context, userId int) (int64, error)
+	GetByUser(ctx context.Context, userId int) ([]entities.Notification, error)
 }
 
 type transport struct {
@@ -26,6 +28,22 @@ func (t *transport) CountUnread(ctx *gin.Context) {
 		panic(err)
 	}
 	result, err := t.usecase.CountUnreadByUser(ctx.Request.Context(), userId)
+	if err != nil {
+		panic(err)
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"data":    result,
+		"message": "success",
+	})
+}
+
+func (t *transport) GetOwn(ctx *gin.Context) {
+
+	userId, err := utils.GetAuthFromContext(ctx)
+	if err != nil {
+		panic(err)
+	}
+	result, err := t.usecase.GetByUser(ctx.Request.Context(), userId)
 	if err != nil {
 		panic(err)
 	}

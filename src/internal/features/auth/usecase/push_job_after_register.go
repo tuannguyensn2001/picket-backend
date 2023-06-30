@@ -1,28 +1,19 @@
 package auth_usecase
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
-	"github.com/hibiken/asynq"
 	"github.com/rs/zerolog/log"
-	"picket/src/internal/constant"
-	"picket/src/internal/dto"
+	"picket/src/internal/jobs"
 )
 
 func (u *usecase) PushJobAfterRegister(ctx context.Context, userId int) error {
 
-	payload := dto.NewUserRegisterPayload{
-		UserId: userId,
-	}
-	var b bytes.Buffer
-	err := json.NewEncoder(&b).Encode(payload)
+	task, err := jobs.NewUserRegisterSuccessJob(userId)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return err
 	}
-	task := asynq.NewTask(constant.JobSendNotificationWhenUserRegisterSuccess, b.Bytes())
-	_, err = u.asynq.Enqueue(task)
+	_, err = u.asynq.EnqueueContext(ctx, task)
 	if err != nil {
 		log.Error().Err(err).Send()
 		return err

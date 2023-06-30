@@ -1,5 +1,5 @@
 package constant
 
 const (
-	JobSendNotificationWhenUserRegisterSuccess = "auth:send_notification_when_user_register_success"
+	NewUserRegisterSuccessJob = "new_user_register_success_job"
 )

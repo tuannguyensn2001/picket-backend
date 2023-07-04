@@ -17,6 +17,7 @@ type IRepository interface {
 	base.IBaseRepository
 	CountAllUsers(ctx context.Context) (int64, error)
 	FindAdmin(ctx context.Context) (*entities.User, error)
+	Save(ctx context.Context, user *entities.User) error
 }
 
 type IOauth2Service interface {

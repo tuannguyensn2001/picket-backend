@@ -23,3 +23,14 @@ type LoginGoogleInput struct {
 type NewUserRegisterPayload struct {
 	UserId int `json:"user_id"`
 }
+
+type InitPasswordInput struct {
+	Password string `json:"password" form:"password" binding:"required"`
+	UserId   int
+}
+
+type ResetPasswordInput struct {
+	OldPassword string `json:"old_password" form:"old_password" binding:"required"`
+	NewPassword string `json:"new_password" form:"new_password" binding:"required"`
+	UserId      int
+}

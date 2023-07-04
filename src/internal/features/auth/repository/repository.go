@@ -57,3 +57,8 @@ func (r *repo) FindAdmin(ctx context.Context) (*entities.User, error) {
 	}
 	return &user, nil
 }
+
+func (r *repo) Save(ctx context.Context, user *entities.User) error {
+	db := r.GetDB(ctx)
+	return db.WithContext(ctx).Save(user).Error
+}

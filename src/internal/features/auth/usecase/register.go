@@ -29,9 +29,10 @@ func (u *usecase) Register(ctx context.Context, input dto.RegisterInput) error {
 	}
 
 	err = u.repository.Transaction(ctx, func(ctx context.Context) error {
+		password := string(password)
 		user = &entities.User{
 			Email:    input.Email,
-			Password: string(password),
+			Password: password,
 			Username: input.Username,
 			Wallet: &entities.Wallet{
 				Balance: 0,

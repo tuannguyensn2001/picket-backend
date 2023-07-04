@@ -2,6 +2,8 @@ package config
 
 import (
 	"github.com/hibiken/asynq"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
 	"github.com/uptrace/opentelemetry-go-extra/otelgorm"
 	"gorm.io/driver/postgres"
@@ -20,6 +22,7 @@ type Config struct {
 	KafkaAddress             string
 	Asynq                    *asynq.Client
 	AsynqServer              *asynq.Server
+	Minio                    *minio.Client
 }
 
 func GetConfig() (*Config, error) {
@@ -49,6 +52,13 @@ func GetConfig() (*Config, error) {
 		Concurrency: 5,
 	})
 
+	m, err := minio.New(structure.MinioEndpoint, &minio.Options{
+		Creds: credentials.NewStaticV4(structure.MinioAccessKey, structure.MinioSecretKey, ""),
+	})
+	if err != nil {
+		log.Error().Err(err).Send()
+	}
+
 	config := &Config{
 		Db:                       db,
 		Port:                     structure.AppPort,
@@ -60,6 +70,7 @@ func GetConfig() (*Config, error) {
 		KafkaAddress:             structure.KafkaAddress,
 		Asynq:                    client,
 		AsynqServer:              srv,
+		Minio:                    m,
 	}
 
 	return config, nil

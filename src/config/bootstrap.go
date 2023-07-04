@@ -17,6 +17,9 @@ type Bootstrap struct {
 	KafkaAddress             string `mapstructure:"KAFKA_ADDRESS"`
 	RedisUrl                 string `mapstructure:"REDIS_URL"`
 	RedisAsynqDb             int    `mapstructure:"REDIS_ASYNQ_DB"`
+	MinioAccessKey           string `mapstructure:"MINIO_ACCESS_KEY"`
+	MinioSecretKey           string `mapstructure:"MINIO_SECRET_KEY"`
+	MinioEndpoint            string `mapstructure:"MINIO_ENDPOINT"`
 }
 
 func bootstrap() (Bootstrap, error) {

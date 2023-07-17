@@ -20,6 +20,10 @@ func (u *usecase) InitPassword(ctx context.Context, input dto.InitPasswordInput)
 	}
 
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Error().Err(err).Send()
+		return err
+	}
 
 	user.Password = string(hashPassword)
 	err = u.repository.Save(ctx, user)

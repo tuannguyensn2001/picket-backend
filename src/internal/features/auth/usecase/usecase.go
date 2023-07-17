@@ -3,12 +3,11 @@ package auth_usecase
 import (
 	"context"
 	"github.com/hibiken/asynq"
-	"go.opentelemetry.io/otel"
 	"picket/src/base"
 	"picket/src/internal/entities"
 )
 
-var tracer = otel.Tracer("auth_usecase")
+//var tracer = otel.Tracer("auth_usecase")
 
 type IRepository interface {
 	Create(ctx context.Context, user *entities.User) error

@@ -10,6 +10,10 @@ import (
 type key struct {
 }
 
+type LogDBKey struct {
+}
+
+var LogDBKeyContext = LogDBKey{}
 var keyDB = key{}
 
 type Repository struct {
@@ -32,7 +36,7 @@ func (r *Repository) GetDB(ctx context.Context) *gorm.DB {
 		db = val
 	}
 
-	check, ok := ctx.Value("log-db").(bool)
+	check, ok := ctx.Value(LogDBKeyContext).(bool)
 	if ok && check {
 		db = db.Session(&gorm.Session{
 			Logger: logger.Default.LogMode(logger.Info),

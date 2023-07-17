@@ -25,7 +25,6 @@ func (r *repo) CreateProfile(ctx context.Context, profile *entities.Profile) err
 
 func (r *repo) FindByEmail(ctx context.Context, email string) (*entities.User, error) {
 	var result entities.User
-	//ctx = context.WithValue(ctx, "log-db", true)
 	if err := r.GetDB(ctx).WithContext(ctx).Where("email = ?", email).First(&result).Error; err != nil {
 		return nil, err
 	}

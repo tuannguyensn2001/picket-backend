@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"picket/src/config"
@@ -19,6 +20,8 @@ func server(config config.Config) *cobra.Command {
 					"message": "pong",
 				})
 			})
+
+			pprof.Register(r)
 
 			routes.Routes(r, config)
 

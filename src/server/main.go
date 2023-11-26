@@ -10,6 +10,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.17.0"
+	_ "net/http/pprof"
 	"picket/src/cmd"
 	config2 "picket/src/config"
 )
